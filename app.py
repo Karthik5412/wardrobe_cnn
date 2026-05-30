@@ -18,3 +18,4 @@ print(result)
 class_names = ['dress','hat','longsleeve','outwear','pants','shirt','shoes','shorts','skirt','t-shirt']
 
 print(class_names[np.argmax(result)])
+
