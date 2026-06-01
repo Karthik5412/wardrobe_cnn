@@ -22,5 +22,17 @@ img_path= r"test.jpg"
 
 img = cv.imread(img_path)
 img = cv.resize(img, (700,400), interpolation=cv.INTER_LINEAR)
+
+h, w, _ = np.shape(img)
+data = np.reshape(img,(h * w,3))
+data = np.float32(data)
+
+clu = 3
+criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 10,1.0)
+flags = cv.KMEANS_RANDOM_CENTERS
+
+
+
 cv.imshow('Image' ,img)
+
 cv.waitKey(0)
