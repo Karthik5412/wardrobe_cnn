@@ -1,12 +1,12 @@
-import tensorflow as tf
-from tensorflow.keras.models import load_model
+# import tensorflow as tf
+# from tensorflow.keras.models import load_model
 import numpy as np
 import cv2 as cv
 
 
-model = load_model("models\cnn.keras")
+# model = load_model("models\cnn.keras")
 
-img= r"data\clothing-dataset-small\validation\shoes\5e577f40-dd22-4b40-9827-ce6cae5ac3fd.jpg"
+img_path= r"test.jpg"
 
 # img = tf.keras.utils.load_img(img, target_size=(224,224))
 # img = tf.keras.utils.img_to_array(img)
@@ -20,4 +20,7 @@ img= r"data\clothing-dataset-small\validation\shoes\5e577f40-dd22-4b40-9827-ce6c
 
 # print(class_names[np.argmax(result)])
 
-cv.readim
+img = cv.imread(img_path)
+img = cv.resize(img, (700,400), interpolation=cv.INTER_LINEAR)
+cv.imshow('Image' ,img)
+cv.waitKey(0)
