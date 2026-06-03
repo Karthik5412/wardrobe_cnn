@@ -1,6 +1,6 @@
 # import tensorflow as tf
 # from tensorflow.keras.models import load_model
-# import numpy as np
+import numpy as np
 # import cv2 as cv
 
 from colorthief import  ColorThief
@@ -46,6 +46,9 @@ ct = ColorThief(img)
 
 dom = ct.get_color(quality=1)
 
+plt.imshow([[dom]])
+plt.axis('off')
+plt.show()
 plt.imshow(plt.imread(img))
 plt.axis('off')
 plt.show()
@@ -58,5 +61,7 @@ plt.imshow([[pal[i] for i in range(5)]])
 plt.axis('off')
 plt.show()
 
-for color in pal :
-    print(color)
+# for color in pal :
+#     print(color)
+
+print(np.array(pal))
