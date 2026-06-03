@@ -41,18 +41,22 @@ img_path= r"test.jpg"
 # cv.waitKey(0)
 
 
-
-ct = ColorThief('janu2.jpg')
+img = 'janu2.jpg'
+ct = ColorThief(img)
 
 dom = ct.get_color(quality=1)
 
-plt.imshow(plt.imread('janu2.jpg'))
+plt.imshow(plt.imread(img))
+plt.axis('off')
 plt.show()
 
-plt.imshow([[dom]])
-plt.show()
+
 
 pal = ct.get_palette(color_count= 5)
 
 plt.imshow([[pal[i] for i in range(5)]])
+plt.axis('off')
 plt.show()
+
+for color in pal :
+    print(color)
