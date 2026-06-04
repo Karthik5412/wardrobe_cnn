@@ -5,6 +5,9 @@ import numpy as np
 
 from colorthief import  ColorThief
 import matplotlib.pyplot as plt
+from rembg import remove
+from PIL import Image
+import os 
 
 
 # model = load_model("models\cnn.keras")
@@ -41,27 +44,41 @@ img_path= r"test.jpg"
 # cv.waitKey(0)
 
 
-img = 'janu2.jpg'
-ct = ColorThief(img)
+img = 'janu4.jpg'
+# ct = ColorThief(img)
 
-dom = ct.get_color(quality=1)
+# dom = ct.get_color(quality=1)
 
-plt.imshow([[dom]])
-plt.axis('off')
+# plt.imshow([[dom]])
+# plt.axis('off')
+# plt.show()
+# plt.imshow(plt.imread(img))
+# plt.axis('off')
+# plt.show()
+
+
+
+# pal = ct.get_palette(color_count= 5)
+
+# plt.imshow([[pal[i] for i in range(5)]])
+# plt.axis('off')
+# plt.show()
+
+# # for color in pal :
+# #     print(color)
+
+# print(np.array(pal))
+
+img = Image.open(img)
+
+no_bg = remove(img)
+plt.imshow(no_bg)
 plt.show()
-plt.imshow(plt.imread(img))
-plt.axis('off')
-plt.show()
 
+ct = ColorThief(no_bg)
 
+# pal = ct.get_palette(color_count=2)
 
-pal = ct.get_palette(color_count= 5)
-
-plt.imshow([[pal[i] for i in range(5)]])
-plt.axis('off')
-plt.show()
-
-# for color in pal :
-#     print(color)
-
-print(np.array(pal))
+# plt.imshow([[pal[i] for i in range(5)]])
+# plt.axis('off')
+# plt.show()
