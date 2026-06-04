@@ -44,7 +44,7 @@ img_path= r"test.jpg"
 # cv.waitKey(0)
 
 
-img = 'janu4.jpg'
+img = 'janu3.jpg'
 # ct = ColorThief(img)
 
 # dom = ct.get_color(quality=1)
@@ -69,16 +69,32 @@ img = 'janu4.jpg'
 
 # print(np.array(pal))
 
-img = Image.open(img)
+img_path = r'data\clothing-dataset-small\validation\shorts\3e203f7a-5b90-4b27-9303-a5634a80f015.jpg'
+img = Image.open(img_path)
 
 no_bg = remove(img)
 plt.imshow(no_bg)
 plt.show()
 
-ct = ColorThief(no_bg)
+plt.imshow(plt.imread('trans.png'))
+plt.show()
 
-# pal = ct.get_palette(color_count=2)
+no_bg_loc = 'trans.png'
 
-# plt.imshow([[pal[i] for i in range(5)]])
+no_bg.save(no_bg_loc)
+# no_bg_img = Image.('trans.png')
+
+ct = ColorThief(img_path)
+
+dom = ct.get_color(quality=1)
+
+plt.imshow([[dom]])
+plt.axis('off')
+plt.show()
+
+
+# pal = ct.get_palette(color_count=3)
+
+# plt.imshow([[pal[i] for i in range(3)]])
 # plt.axis('off')
 # plt.show()
