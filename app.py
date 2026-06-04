@@ -4,45 +4,47 @@ from colorthief import ColorThief
 from PIL import Image
 import matplotlib.pyplot as plt
 from rembg import remove
+import pandas as pd
+import io 
+
+def val_to_df (imgs) :
+    res = []
+    
+    for img in imgs:
+        
+        raw_pixels = remove(img.read(), force_return_bytes=True)
+        raw_data = Image.open(io.BytesIO(raw_pixels))
+        rgb_data = Image.new("RGB", raw_data.size,(255,255,255))
+        rgb_data.paste(raw_data,mask=raw_data.split()[3])
+        img_arr = io.BytesIO()
+        rgb_data.save(img_arr,format="jpeg")
+        img_arr.seek(0)
+        
+        ct = ColorThief(img_arr)
+        pal = ct.get_color(quality=1)
+        res.append(pal)
+        
+    df = pd.DataFrame(res, columns=["Red", "Green", "Blue"])
+    
+    return df
+
 
 st.set_page_config("image shit", page_icon="📷", layout='wide')
 imgs = st.file_uploader('Upload Images',type=['jepg','jpg','png'], accept_multiple_files=True)
 
-img = Image.open(imgs[0])
+if imgs :
+    cols = st.columns(3) 
+    for idx, img in enumerate(imgs) :
+        col = cols[idx % 3]
+        col.image(img)
 
-rem = remove(img)
+result = val_to_df(imgs)
 
-rem.save("trans.png")
-st.image('trans.png','Png Image')
+st.dataframe(result)
 
-ct = ColorThief('trans.png')
-dom = ct.get_color(quality=5)
-st.write(dom)
 
-fig,ax = plt.subplots(figsize= (2,2))
-ax.imshow([[dom]])
+fig, ax = plt.subplots(figsize=(2,2))
+ax.imshow([[(31,137,65)]])
 ax.axis('off')
 st.pyplot(fig)
-
-st.write(np.array(dom))
-
-pal = ct.get_palette(color_count= 3, quality=5)
-ax.imshow([[pal[i] for i in range(3)]])
-ax.axis('off')
-st.pyplot(fig)
-
-
-# if imgs :
-#     cols = st.columns(3)
-#     for idx, img in enumerate(imgs):
-        
-#         col = cols[idx % 3]
-#         col.image(img)
-#         ct = ColorThief(img)
-        
-#         fig, ax = plt.subplots(figsize=(2, 2))
-#         ax.imshow([[ct.get_color(quality=1)]])
-#         ax.axis('off')
-        
-#         col.pyplot(fig)
 
