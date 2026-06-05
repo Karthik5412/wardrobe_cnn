@@ -8,9 +8,11 @@ import pandas as pd
 import io 
 
 def val_to_df (imgs) :
-    res = []
+    res1 = []
+    res2 = []
     
-    for img in imgs:
+    for idx, img in enumerate(imgs):
+        res1.append([idx,img])
         
         raw_pixels = remove(img.read(), force_return_bytes=True)
         raw_data = Image.open(io.BytesIO(raw_pixels))
@@ -22,9 +24,10 @@ def val_to_df (imgs) :
         
         ct = ColorThief(img_arr)
         pal = ct.get_color(quality=1)
-        res.append(pal)
-        
-    df = pd.DataFrame(res, columns=["Red", "Green", "Blue"])
+        res2.append(pal)
+    df1 = pd.DataFrame(res1, columns=["Index", "Image"])
+    df2 = pd.DataFrame(res2, columns=["Red", "Green", "Blue"])
+    df = pd.concat([df1,df2], axis=1 )
     
     return df
 
@@ -40,8 +43,8 @@ if imgs :
 
 result = val_to_df(imgs)
 
-st.dataframe(result)
-
+st.dataframe(result.drop(columns=['Image']))
+st.image(result.loc[1,'Image'])
 
 fig, ax = plt.subplots(figsize=(2,2))
 ax.imshow([[(31,137,65)]])
