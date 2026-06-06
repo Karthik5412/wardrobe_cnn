@@ -11,11 +11,28 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import  load_img, img_to_array
 from tensorflow.keras.applications.resnet50 import preprocess_input
 
-@st.cache_data
+@st.cache_resource
 def load_cnn() :
     model = load_model("models\cnn.keras")
     
     return model 
+
+
+@st.cache_data
+def process_single_img(img):
+    raw_pixels = remove(img.read(), force_return_bytes=True)
+    raw_data = Image.open(io.BytesIO(raw_pixels))
+    rgb_data = Image.new("RGB", raw_data.size,(255,255,255))
+    rgb_data.paste(raw_data,mask=raw_data.split()[3])
+    img_arr = io.BytesIO()
+    rgb_data.save(img_arr,format="jpeg")
+    img_arr.seek(0)
+    
+    ct = ColorThief(img_arr)
+    pal = ct.get_color(quality=1)
+    
+    return pal
+
 
 
 def predictions(model, imgs) :
@@ -62,16 +79,7 @@ def val_to_df (imgs,label) :
         if hasattr(img, 'seek'):
             img.seek(0)
         
-        raw_pixels = remove(img.read(), force_return_bytes=True)
-        raw_data = Image.open(io.BytesIO(raw_pixels))
-        rgb_data = Image.new("RGB", raw_data.size,(255,255,255))
-        rgb_data.paste(raw_data,mask=raw_data.split()[3])
-        img_arr = io.BytesIO()
-        rgb_data.save(img_arr,format="jpeg")
-        img_arr.seek(0)
-        
-        ct = ColorThief(img_arr)
-        pal = ct.get_color(quality=1)
+        pal = process_single_img(img)
         res2.append(pal)
     df1 = pd.DataFrame(res1, columns=[f"{label}_Index", f"{label}_Image"])
     df2 = pd.DataFrame(res2, columns=[f"{label}_Red", f"{label}_Green", f"{label}_Blue"])
@@ -85,7 +93,7 @@ imgs = st.file_uploader('Upload Images',type=['jepg','jpg','png'], accept_multip
 
 btn = st.button('Predict')
 model = load_cnn()
-if btn :
+if btn and imgs:
     shirt_df,pants_df,shoes_df = predictions(model, imgs)
 
     # st.dataframe(shirt_df.drop(columns=['Image']))
